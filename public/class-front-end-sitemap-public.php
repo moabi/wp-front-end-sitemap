@@ -109,7 +109,7 @@ class Front_End_Sitemap_Public {
 	 * @param $type
 	 * @return string
 	 */
-	public function the_sitemap($type,$wpmenu){
+	public function the_sitemap($type){
 		$output= '';
 
 		$thumbmenu = new Thumbnail_walker();
@@ -122,15 +122,15 @@ class Front_End_Sitemap_Public {
 			'title_li' => '',
 			'echo' => false,
 			'authors' => '',
+			'post_type' => $type,
 			'sort_column' => 'menu_order, post_title',
 			'link_before' => '',
 			'link_after' => '',
 			'walker' => $thumbmenu, // this fires our new thumbnail walker menu
 		);
-		$menuClass = ($wpmenu == true)? 'pure-menu-list':'fes-wrapper';
-		$output .= '<ul class="'.$menuClass.'">';
+		
 		$output .= wp_list_pages($defaults);
-		$output .= '</ul>';
+		
 
 		return $output;
 	}
@@ -147,38 +147,36 @@ class Front_End_Sitemap_Public {
 	public function wp_query_shortcode($atts){
 
 		$type = (isset($atts['type'])) ? $atts['type'] : false;
-		$wpmenu = (isset($atts['wpmenu'])) ? true : false;
+
 		if( !isset($type))
 			return false;
+		$menuClass = (!isset($atts['class']))? 'fes-wrapper': $atts['class'];
 
 		//var_dump(get_wp_fes_plugin_dir() .'cache/');
 		//test cache
 		if( $this->get($type) == null){
 
-			$data = $this->the_sitemap($type,$wpmenu);
+			$data = $this->the_sitemap($type);
+			
+			$this->set($type,$data);
 
-			if($wpmenu){
-				$this->set($type.'-short',$data);
-				$output = $this->get($type.'-short');
-			} else {
-				$this->set($type,$data);
-				$output = $this->get($type);
-			}
-
+			$output = '<ul class="'.$menuClass.'">';
+			$output .= $this->get($type);
+			$output .= '</ul>';
+			
 
 		} elseif ( isset($type) && $this->get($type) != null ){
 
-			if($wpmenu){
-				$output = $this->get($type.'-short');
-			} else {
-				$output = $this->get($type);
-			}
+			$output = '<ul class="'.$menuClass.'">';
+			$output .= $this->get($type);
+			$output .= '</ul>';
 
 		} else {
 			$output = 'please define a "type" attribute in your shortcode';
 		}
 
 		return $output;
+
 	}
 
 	/**
@@ -198,11 +196,8 @@ class Front_End_Sitemap_Public {
 		$file = get_wp_fes_plugin_dir() .'cache/'. $file.'.json';
 		if (file_exists($file) && filemtime($file) + $this->timeout > time()) {
 			$content = json_decode(file_get_contents($file));
-			if (is_array($content)) {
-				return $content;
-			} else {
-				return $content;
-			}
+			return $content;
+
 		}
 		return NULL;
 	}

@@ -106,7 +106,7 @@ class Front_End_Sitemap_Admin {
 	 */
 	public function wp_admin_menu(){
 		//add settings page
-		add_submenu_page( 'tools.php','FES', 'FES', 'publish_pages', 'front-end-sitemap', array( $this, 'helper' ) );
+		add_submenu_page( 'tools.php','Front-end Sitemap', 'FE Sitemap', 'publish_pages', 'front-end-sitemap', array( $this, 'helper' ) );
 		//register settings
 		add_action( 'admin_init', array($this, 'register_plugins_settings') );
 	}

@@ -118,7 +118,7 @@ class Front_End_Sitemap {
 		 * side of the site.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-front-end-sitemap-public.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/Thumbnail_walker.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-thumbnail-walker.php';
 
 		$this->loader = new Front_End_Sitemap_Loader();
 
