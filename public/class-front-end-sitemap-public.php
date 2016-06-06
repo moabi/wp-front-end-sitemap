@@ -22,7 +22,7 @@
  */
 class Front_End_Sitemap_Public {
 
-	public $timeout = 1200;
+	public $timeout = 1800;
 
 	/**
 	 * The ID of this plugin.
@@ -88,18 +88,6 @@ class Front_End_Sitemap_Public {
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
-
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Front_End_Sitemap_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Front_End_Sitemap_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
 
 		//wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/front-end-sitemap-public.js', array( 'jquery' ), $this->version, false );
 
@@ -192,14 +180,21 @@ class Front_End_Sitemap_Public {
 	 * @param $file
 	 * @return array|mixed|null|object
 	 */
-	public function get($file) {
-		$file = get_wp_fes_plugin_dir() .'cache/'. $file.'.json';
-		if (file_exists($file) && filemtime($file) + $this->timeout > time()) {
+	public function get($type) {
+		$file = get_wp_fes_plugin_dir() .'cache/'. $type.'.json';
+		$file_age = filemtime($file) + $this->timeout;
+		$file_timed_out = intval($file_age - time());
+		//check if file exist and is still valid
+		if (file_exists($file) && $file_timed_out < 0) {
 			$content = json_decode(file_get_contents($file));
 			return $content;
 
+		} else {
+			$data = $this->the_sitemap($type);
+			$this->set($type,$data);
+			$content = json_decode(file_get_contents($file));
+			return $content;
 		}
-		return NULL;
 	}
 	/**
 	 * Set cache file.
