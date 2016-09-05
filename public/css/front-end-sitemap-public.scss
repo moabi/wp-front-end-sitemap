@@ -2,16 +2,18 @@
  * All of the CSS for your public-facing functionality should be
  * included in this file.
  */
-.fes-wrapper{margin: 1em 0;padding: 0;clear: both;
-  list-style: none;
-  display: block;
+.fes-wrapper{
+  margin: 0 0 .5em .5em;
+  flex-wrap: wrap;
+  display: flex;
+  justify-content: space-around;
+  align-content: stretch;
   width: 100%;
 }
 .fes-wrapper > li  {
-  width: auto;
-  float: left;
-  margin: 0 1% 2em;
+  margin-bottom: 2em;
   background: #ededed;
+  list-style: none;
 }
 
 .fes-wrapper > li > a{

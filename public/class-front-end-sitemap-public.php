@@ -185,7 +185,7 @@ class Front_End_Sitemap_Public {
 		$file_age = filemtime($file) + $this->timeout;
 		$file_timed_out = intval($file_age - time());
 		//check if file exist and is still valid
-		if (file_exists($file) && $file_timed_out < 0) {
+		if (file_exists($file) && $file_timed_out > 0) {
 			$content = json_decode(file_get_contents($file));
 			return $content;
 
